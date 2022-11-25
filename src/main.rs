@@ -13,6 +13,71 @@ fn main() {
     // assert_eq!(celsius_to_fahrenheit(23.0), 73.4);
     // print!("It works!");
 
+    // works_with_loop();
+
+    // feild shadowing
+    // work_with_shadowing();
+
+    // ownership
+    // work_with_ownership();
+
+    // work_int_ownership();
+    let rocket_flue = String::from("RP-1");
+    // process_flue_str(rocket_flue);
+    // println!("After process {}", rocket_flue); // not owner any more!!
+    let rocket_flue = process_flue_str(rocket_flue);
+    println!("After process {}", rocket_flue);
+}
+
+// stack!!
+fn work_int_ownership() {
+    let rocket_flue = 1;
+    process_flue_int(rocket_flue);
+    println!("After process {}", rocket_flue);
+}
+
+fn process_flue_str(mut propelant: String) -> String {
+    propelant.push_str("...");
+    println!("Processing {}", propelant);
+    String::from("LNG")
+}
+
+fn process_flue_int(mut propelant: i32) {
+    propelant += 1;
+    println!("Processing {}", propelant);
+}
+
+fn work_with_ownership() {
+    let out_planet;
+    let clone_planet;
+    {
+        let inner_planet = String::from("Mercury");
+        println!("Inner {}", inner_planet);
+        out_planet = inner_planet;
+        // inner_planet ownersiph was move! removed from stack
+    }
+    clone_planet = out_planet.clone();
+    // copy heap value and owned it
+    println!("Out {}", out_planet);
+    println!("Out {}", clone_planet);
+}
+
+fn work_with_shadowing() {
+    let planet = "Earth";
+    {
+        println!("Planet is {}", planet);
+        let planet = 4; // Mars :)
+        println!("Planet is {}", planet);
+    }
+    println!("Planet is {}", planet);
+    print!("It works!");
+    // string type, dynamic alocate memory
+    let mut msg = String::from("Earth");
+    msg.push_str(" is home");
+    println!("{}", msg);
+}
+
+fn works_with_loop() {
     let mut count = 0;
     let result = loop {
         if count == 5 {
@@ -21,26 +86,20 @@ fn main() {
         count += 1;
         println!("count is {}", count);
     };
-
     println!("Result after loop is {}", result);
-
     let letters = ['a', 'b', 'c', 'd'];
-
     for item in letters {
         println!("Item is {}", item);
     }
-
     for (index, &item) in letters.iter().enumerate() {
         println!("Item {} is {}", index, item);
         if item == 'b' {
             break;
         }
     }
-
     for number in 0..5 {
         println!("Number is {}", number);
     }
-
     let mut matrix = [[1, 2, 3], [3, 4, 5], [4, 5, 6]];
     for row in matrix.iter_mut() {
         for element in row.iter_mut() {
@@ -49,12 +108,10 @@ fn main() {
         }
         println!();
     }
-
     let array = [1, 9, -2, 0, 23, 20, -7, 13, 37, 20, 56, -18, 20, 3];
     let mut max: i32 = -2147483648;
     let mut min: i32 = 2147483647;
     let mut mean: f64 = 0.0;
-
     for value in array {
         mean += value as f64;
         if value > max {
@@ -65,11 +122,9 @@ fn main() {
         }
     }
     mean /= array.len() as f64;
-
     assert_eq!(max, 56);
     assert_eq!(min, -18);
     assert_eq!(mean, 12.5);
-    print!("It works!");
 }
 
 fn celsius_to_fahrenheit(temp: f64) -> f64 {
