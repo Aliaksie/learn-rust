@@ -5,10 +5,86 @@ fn main() {
 
     // works_with_array();
 
+    // works_with_tuple();
+
+    // let result = square(8);
+    // println!("Results is {:?}", result);
+
+    // assert_eq!(celsius_to_fahrenheit(23.0), 73.4);
+    // print!("It works!");
+
+    let mut count = 0;
+    let result = loop {
+        if count == 5 {
+            break count * 10;
+        }
+        count += 1;
+        println!("count is {}", count);
+    };
+
+    println!("Result after loop is {}", result);
+
+    let letters = ['a', 'b', 'c', 'd'];
+
+    for item in letters {
+        println!("Item is {}", item);
+    }
+
+    for (index, &item) in letters.iter().enumerate() {
+        println!("Item {} is {}", index, item);
+        if item == 'b' {
+            break;
+        }
+    }
+
+    for number in 0..5 {
+        println!("Number is {}", number);
+    }
+
+    let mut matrix = [[1, 2, 3], [3, 4, 5], [4, 5, 6]];
+    for row in matrix.iter_mut() {
+        for element in row.iter_mut() {
+            *element += 1;
+            print!("{}\t", element);
+        }
+        println!();
+    }
+
+    let array = [1, 9, -2, 0, 23, 20, -7, 13, 37, 20, 56, -18, 20, 3];
+    let mut max: i32 = -2147483648;
+    let mut min: i32 = 2147483647;
+    let mut mean: f64 = 0.0;
+
+    for value in array {
+        mean += value as f64;
+        if value > max {
+            max = value;
+        }
+        if min > value {
+            min = value;
+        }
+    }
+    mean /= array.len() as f64;
+
+    assert_eq!(max, 56);
+    assert_eq!(min, -18);
+    assert_eq!(mean, 12.5);
+    print!("It works!");
+}
+
+fn celsius_to_fahrenheit(temp: f64) -> f64 {
+    (1.8 * temp) + 32.0
+}
+
+fn square(x: i32) -> (i32, i32) {
+    println!("Input is {}", x);
+    (x * x, x)
+}
+
+fn works_with_tuple() {
     let stuff: (u8, f32, char) = (10, 3.14, 'x');
     println!("Tuple  is {:?}", stuff);
     println!("Second is {}", stuff.1);
-
     let (a, b, c) = stuff;
     println!("A is {}", a);
 }
