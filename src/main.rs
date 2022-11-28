@@ -2,26 +2,74 @@ use std::io;
 
 use rand::prelude::*;
 
+struct Color(u8, u8, u8); // RGB
+struct Point(u8, u8, u8); // XYZ
+
+#[derive(Debug)]
+#[derive(Clone)]
+struct Shuttle {
+    name: String,
+    crew: u8,
+    propellant: f64,
+}
+
+struct Rectangle {
+    width: f64,
+    higth: f64
+}
+
+impl Shuttle {
+
+    fn get_name(&self) -> &str {
+        &self.name
+    }
+
+    fn add_flue(&mut self, gallons: f64) {
+        self.propellant += gallons;
+    }
+
+    fn new(name: &str) -> Shuttle {
+        Shuttle {
+            name: String::from(name),
+            crew: 8,
+            propellant: 100.0,
+        }
+    }
+}
+
+impl Rectangle {
+    fn get_area(&self) -> f64 {
+        self.higth * self.width
+    }
+
+    fn scale(&mut self, scalar: f64) {
+        self.higth *= scalar;
+        self.width *= scalar;
+    }
+
+    fn new(width: f64, higth: f64) -> Rectangle {
+        Rectangle {  width, higth }
+    }
+}
+
 fn main() {
-    // works_with_primitive();
+    let mut vihecle = Shuttle::new("Endeavour");
 
-    // works_with_array();
+    let mut vihecle2 = Shuttle {
+        name: String::from("Descovery"),
+        ..vihecle
+    };
 
-    // works_with_tuple();
+    let mut vihecle3 = Shuttle {
+        ..vihecle.clone()
+    };
 
-    // let result = square(8);
-    // println!("Results is {:?}", result);
+    println!("Name is {}", vihecle.name);
+    vihecle.name = String::from("Atlantis");
+    println!("vihecle {:?}", vihecle3);
 
-    // assert_eq!(celsius_to_fahrenheit(23.0), 73.4);
-    // print!("It works!");
-
-    // works_with_loop();
-
-    // feild shadowing
-    // work_with_shadowing();
-
-    // ownership
-    // work_with_ownership();
+    let name = vihecle3.get_name();
+    println!("Name is {}", name);
 
     // work_int_ownership();
     // let mut rocket_flue = String::from("RP-1");
@@ -29,12 +77,6 @@ fn main() {
     // // println!("After process {}", rocket_flue); // not owner any more!!
     // let length = process_flue_str(&mut rocket_flue);
     // println!("After process {} and length is {}", rocket_flue, length);
-
-    // slices 
-    // works_with_slices();
-
-    guess_the_number();
-
 }
 
 fn guess_the_number() {
@@ -44,25 +86,45 @@ fn guess_the_number() {
     let mut numbers = [0, 0, 0, 0, 0];
     let mut tries: usize = 4;
     loop {
-        io::stdin().read_line(&mut buffer).expect("Opps. Not able to read input data!");
-        let input_number = buffer.trim().parse::<u32>().expect("Opps. Not able to parse input in to the nummer!");
+        io::stdin()
+            .read_line(&mut buffer)
+            .expect("Opps. Not able to read input data!");
+        let input_number = buffer
+            .trim()
+            .parse::<u32>()
+            .expect("Opps. Not able to parse input in to the nummer!");
         numbers[tries] = input_number;
-        let tip = if number == input_number {break; } else if number > input_number { "lower"} else { "high"};
+        let tip = if number == input_number {
+            break;
+        } else if number > input_number {
+            "lower"
+        } else {
+            "high"
+        };
         if tries == 0 {
-            panic!("Opps. You lose the game :(. I guessed the number {}!", number);
+            panic!(
+                "Opps. You lose the game :(. I guessed the number {}!",
+                number
+            );
             break;
         }
-        println!("Your numer is {}, too {}, Please try again!. Tries left {}", input_number, tip, tries);
+        println!(
+            "Your numer is {}, too {}, Please try again!. Tries left {}",
+            input_number, tip, tries
+        );
         buffer.clear();
-        tries -=1;
+        tries -= 1;
     }
-    println!("You got it! I guessed the number {}! You inserted {:?}", number, numbers);
+    println!(
+        "You got it! I guessed the number {}! You inserted {:?}",
+        number, numbers
+    );
 }
 
 fn works_with_slices() {
     let msg = String::from("Greetings from Poland!");
     println!("Msg   is {}", msg);
-    let last_world = &msg[15..15+6];
+    let last_world = &msg[15..15 + 6];
     println!("Last  is {}", last_world);
     let fist = get_first_world(&msg);
     println!("First is {}", fist);
@@ -94,11 +156,11 @@ fn trim_spaces(s: &str) -> &str {
 
     while start != end {
         if bytes[start] == b' ' {
-            start +=1;
+            start += 1;
         }
 
         if bytes[end] == b' ' {
-            end -=1;
+            end -= 1;
         }
 
         if bytes[start] != b' ' && bytes[end] != b' ' {
@@ -107,13 +169,13 @@ fn trim_spaces(s: &str) -> &str {
     }
 
     if start != end {
-        end +=1;
+        end += 1;
     }
 
     &s[start..end]
 }
 
-fn get_first_world(s: &String ) -> &str {
+fn get_first_world(s: &String) -> &str {
     let bytes = s.as_bytes();
 
     for (i, &item) in bytes.iter().enumerate() {
@@ -123,7 +185,7 @@ fn get_first_world(s: &String ) -> &str {
     }
 
     &s
-} 
+}
 
 // stack!!
 fn work_int_ownership() {
