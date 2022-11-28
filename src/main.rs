@@ -1,25 +1,24 @@
 use std::io;
+use std::mem;
 
 use rand::prelude::*;
 
 struct Color(u8, u8, u8); // RGB
 struct Point(u8, u8, u8); // XYZ
 
-#[derive(Debug)]
-#[derive(Clone)]
-struct Shuttle {
+#[derive(Debug, Clone)]
+struct Shuttle<T> {
     name: String,
-    crew: u8,
+    crew: T,
     propellant: f64,
 }
 
 struct Rectangle {
     width: f64,
-    higth: f64
+    higth: f64,
 }
 
-impl Shuttle {
-
+impl<T> Shuttle<T> {
     fn get_name(&self) -> &str {
         &self.name
     }
@@ -28,10 +27,10 @@ impl Shuttle {
         self.propellant += gallons;
     }
 
-    fn new(name: &str) -> Shuttle {
+    fn new(name: &str, size: T) -> Shuttle<T> {
         Shuttle {
             name: String::from(name),
-            crew: 8,
+            crew: size,
             propellant: 100.0,
         }
     }
@@ -48,28 +47,19 @@ impl Rectangle {
     }
 
     fn new(width: f64, higth: f64) -> Rectangle {
-        Rectangle {  width, higth }
+        Rectangle { width, higth }
     }
 }
 
 fn main() {
-    let mut vihecle = Shuttle::new("Endeavour");
+    let mut vihecle = Shuttle::new("Endeavour", 8u8);
+    let boxed_vihecle: Box<Shuttle<u8>> = Box::new(vihecle.clone());
 
-    let mut vihecle2 = Shuttle {
-        name: String::from("Descovery"),
-        ..vihecle
-    };
+    println!("Stack size is {} bytes", mem::size_of_val(&vihecle));
+    println!("Stack size is {} bytes", mem::size_of_val(&boxed_vihecle));
 
-    let mut vihecle3 = Shuttle {
-        ..vihecle.clone()
-    };
-
-    println!("Name is {}", vihecle.name);
-    vihecle.name = String::from("Atlantis");
-    println!("vihecle {:?}", vihecle3);
-
-    let name = vihecle3.get_name();
-    println!("Name is {}", name);
+    println!("Heap size is {} bytes", mem::size_of_val(&*vihecle.name));
+    println!("Heap size is {} bytes", mem::size_of_val(&*boxed_vihecle));
 
     // work_int_ownership();
     // let mut rocket_flue = String::from("RP-1");
@@ -77,6 +67,10 @@ fn main() {
     // // println!("After process {}", rocket_flue); // not owner any more!!
     // let length = process_flue_str(&mut rocket_flue);
     // println!("After process {} and length is {}", rocket_flue, length);
+}
+
+fn sum_boxes<T: std::ops::Add<Output = T>>(a: Box<T>, b: Box<T>) -> Box<T> {
+    Box::new(*a + *b)
 }
 
 fn guess_the_number() {
