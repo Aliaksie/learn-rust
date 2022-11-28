@@ -1,4 +1,6 @@
-use std::{char, str::Bytes};
+use std::io;
+
+use rand::prelude::*;
 
 fn main() {
     // works_with_primitive();
@@ -29,35 +31,56 @@ fn main() {
     // println!("After process {} and length is {}", rocket_flue, length);
 
     // slices 
+    // works_with_slices();
+
+    guess_the_number();
+
+}
+
+fn guess_the_number() {
+    let number: u32 = thread_rng().gen_range(1..100);
+    let mut buffer = String::new();
+    println!("I gueesed the secret number from 1..100. Try to guess it!");
+    let mut numbers = [0, 0, 0, 0, 0];
+    let mut tries: usize = 4;
+    loop {
+        io::stdin().read_line(&mut buffer).expect("Opps. Not able to read input data!");
+        let input_number = buffer.trim().parse::<u32>().expect("Opps. Not able to parse input in to the nummer!");
+        numbers[tries] = input_number;
+        let tip = if number == input_number {break; } else if number > input_number { "lower"} else { "high"};
+        if tries == 0 {
+            panic!("Opps. You lose the game :(. I guessed the number {}!", number);
+            break;
+        }
+        println!("Your numer is {}, too {}, Please try again!. Tries left {}", input_number, tip, tries);
+        buffer.clear();
+        tries -=1;
+    }
+    println!("You got it! I guessed the number {}! You inserted {:?}", number, numbers);
+}
+
+fn works_with_slices() {
     let msg = String::from("Greetings from Poland!");
     println!("Msg   is {}", msg);
     let last_world = &msg[15..15+6];
     println!("Last  is {}", last_world);
     let fist = get_first_world(&msg);
     println!("First is {}", fist);
-
     let test1 = "We need more space.";
     assert_eq!(trim_spaces(test1), "We need more space.");
-    
     let test2 = String::from("   There's space in front.");
     assert_eq!(trim_spaces(&test2), "There's space in front.");
-    
     let test3 = String::from("There's space to the rear. ");
-    assert_eq!(trim_spaces(&test3[..]), "There's space to the rear.");   
-    
+    assert_eq!(trim_spaces(&test3[..]), "There's space to the rear.");
     let test4 = "  We're surrounded by space!    ";
     assert_eq!(trim_spaces(test4), "We're surrounded by space!");
-    
     let test5 = "     ";
     assert_eq!(trim_spaces(test5), "");
-    
     let test6 = "";
     assert_eq!(trim_spaces(test6), "");
-    
     let test7 = " 🚀 ";
     assert_eq!(trim_spaces(test7), "🚀");
     println!("Tests passed!");
-
 }
 
 fn trim_spaces(s: &str) -> &str {
@@ -65,7 +88,7 @@ fn trim_spaces(s: &str) -> &str {
     if bytes.len() == 0 {
         return &s;
     }
-    
+
     let mut start: usize = 0;
     let mut end: usize = bytes.len() - 1;
 
