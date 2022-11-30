@@ -1,3 +1,4 @@
+use std::fmt;
 use std::io;
 use std::mem;
 
@@ -51,15 +52,48 @@ impl Rectangle {
     }
 }
 
+enum Shape {
+    Circle(f64),
+    Rectangle(f64, f64),
+    Triangle(f64, f64, f64),
+}
+
+impl Shape {
+    fn get_perimeter(&self) -> f64 {
+        match *self {
+            Shape::Circle(r) => r * 2.0 * std::f64::consts::PI,
+            Shape::Rectangle(w, h) => (2.0 * w) + (2.0 * h),
+            Shape::Triangle(a, b, c) => a + b + c,
+        }
+    }
+}
+
 fn main() {
-    let mut vihecle = Shuttle::new("Endeavour", 8u8);
-    let boxed_vihecle: Box<Shuttle<u8>> = Box::new(vihecle.clone());
+    let my_shape = Shape::Rectangle(1.2, 3.4);
 
-    println!("Stack size is {} bytes", mem::size_of_val(&vihecle));
-    println!("Stack size is {} bytes", mem::size_of_val(&boxed_vihecle));
+    match my_shape {
+        Shape::Circle(r) => println!("It is circle with r={}", r),
+        Shape::Rectangle(w, h) => println!("It is rectangle with w={} and h={}", w, h),
+        Shape::Triangle(a, b, c) => println!("It is trangle with a={}, b={} and c={}", a, b, c),
+    }
 
-    println!("Heap size is {} bytes", mem::size_of_val(&*vihecle.name));
-    println!("Heap size is {} bytes", mem::size_of_val(&*boxed_vihecle));
+    let array = [1, 2, 3, 4, 5];
+    let value = array.get(5).unwrap_or(&-1);
+    println!("Value from array {:?}", value);
+
+    // let propellant_1 = String::from("RP-1");
+    // let propellant_2 = String::from("LNG");
+    // let result = lifetime_fluet(&propellant_1, &propellant_2);
+    // println!("Result is {}", result);
+
+    // let mut vihecle = Shuttle::new("Endeavour", 8u8);
+    // let boxed_vihecle: Box<Shuttle<u8>> = Box::new(vihecle.clone());
+
+    // println!("Stack size is {} bytes", mem::size_of_val(&vihecle));
+    // println!("Stack size is {} bytes", mem::size_of_val(&boxed_vihecle));
+
+    // println!("Heap size is {} bytes", mem::size_of_val(&*vihecle.name));
+    // println!("Heap size is {} bytes", mem::size_of_val(&*boxed_vihecle));
 
     // work_int_ownership();
     // let mut rocket_flue = String::from("RP-1");
@@ -67,6 +101,26 @@ fn main() {
     // // println!("After process {}", rocket_flue); // not owner any more!!
     // let length = process_flue_str(&mut rocket_flue);
     // println!("After process {} and length is {}", rocket_flue, length);
+}
+
+fn lifetime_fluet<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+
+fn print_compare<T, U>(left: T, right: U)
+where
+    T: fmt::Display + PartialEq + From<U>,
+    U: fmt::Display + PartialEq + Copy,
+{
+    if left == T::from(right) {
+        println!("{} eq to {}", left, right);
+    } else {
+        println!("{} not_eq to {}", left, right);
+    }
 }
 
 fn sum_boxes<T: std::ops::Add<Output = T>>(a: Box<T>, b: Box<T>) -> Box<T> {
