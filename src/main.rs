@@ -1,4 +1,5 @@
 use std::fmt;
+use std::fs;
 use std::io;
 use std::mem;
 
@@ -77,9 +78,18 @@ fn main() {
         Shape::Triangle(a, b, c) => println!("It is trangle with a={}, b={} and c={}", a, b, c),
     }
 
-    let array = [1, 2, 3, 4, 5];
-    let value = array.get(5).unwrap_or(&-1);
-    println!("Value from array {:?}", value);
+    let result = fs::read_to_string("test.txt");
+    let content = match result {
+        Ok(data) => data,
+        Err(e) => match e.kind() {
+            io::ErrorKind::NotFound => String::from("file not found"),
+            io::ErrorKind::PermissionDenied => String::from("No acces to fs"),
+            _ => String::from("another error"),
+        },
+    };
+    println!("Result is {}", content);
+
+    guess_the_number();
 
     // let propellant_1 = String::from("RP-1");
     // let propellant_2 = String::from("LNG");
@@ -129,19 +139,26 @@ fn sum_boxes<T: std::ops::Add<Output = T>>(a: Box<T>, b: Box<T>) -> Box<T> {
 
 fn guess_the_number() {
     let number: u32 = thread_rng().gen_range(1..100);
-    let mut buffer = String::new();
     println!("I gueesed the secret number from 1..100. Try to guess it!");
-    let mut numbers = [0, 0, 0, 0, 0];
+    let mut numbers: Vec<u32> = Vec::new();
     let mut tries: usize = 4;
     loop {
-        io::stdin()
-            .read_line(&mut buffer)
-            .expect("Opps. Not able to read input data!");
-        let input_number = buffer
-            .trim()
-            .parse::<u32>()
-            .expect("Opps. Not able to parse input in to the nummer!");
-        numbers[tries] = input_number;
+        let mut buffer = String::new();
+        let input_number = match io::stdin().read_line(&mut buffer) {
+            Ok(_) => match buffer.trim().parse::<u32>() {
+                Ok(val) => val,
+                Err(_) => {
+                    println!("Wrong input. Pleas try again!");
+                    continue;
+                }
+            },
+            Err(_) => {
+                println!("Wrong input. Pleas try again!");
+                continue;
+            }
+        };
+
+        numbers.push(input_number);
         let tip = if number == input_number {
             break;
         } else if number > input_number {
