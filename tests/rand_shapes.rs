@@ -39,7 +39,7 @@ fn it_rand_triangle() {
     let triangle = Shape::Triangle(a, b, c);
 
     let p: f64 = (a + b + c) / 2.0;
-    let ex_area = (p * (p - a) * (p - b) * (p - c)).sqrt();
+    let ex_area = (p * (p - a) * (p - b) * (p - c)).abs().sqrt();
 
     // test public functions
     let area = triangle.get_feature(Feature::Area);

@@ -23,7 +23,7 @@ impl Shape {
             Shape::Rectangle(w, h) => w * h,
             Shape::Triangle(a, b, c) => {
                 let p: f64 = (a + b + c) / 2.0;
-                (p * (p - a) * (p - b) * (p - c)).sqrt()
+                (p * (p - a) * (p - b) * (p - c)).abs().sqrt()
             }
         }
     }
