@@ -1,8 +1,11 @@
+use crate::challenges::morse_code::*;
+
 mod challenges;
 
 fn main() {
-    let input = vec![2, 1, 1];
-    let answer = challenges::find::unique(input);
+    let greeting = "Hello, world"
+        .to_string()
+        .to_morse_code();
 
-    println!("unique items -> {:?}", answer)
+    print(&greeting);
 }
