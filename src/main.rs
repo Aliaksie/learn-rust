@@ -1,17 +1,7 @@
 mod challenges;
 
 fn main() {
-    let mut hand = challenges::black_jack::Hand::new();
-    let mut dealer = challenges::black_jack::Dealer::new();
-    let mut desk  = dealer.get_desk();
-    
-    // ..
-    hand.add(desk.pop().unwrap());
-    hand.add(desk.pop().unwrap());
-    hand.add(desk.pop().unwrap());
+    let rust_in_action: challenges::isbn::Isbn = "978-3-16-148410-0".parse().unwrap();
 
-
-    let msg = if hand.is_loosing() { "Lose" } else { "Won" }; 
-    println!("My card {:?}", hand.get_card());
-    println!("You are {}!", msg);
+    println!("Rust in Action's ISBN-13 ({})is valid!", rust_in_action);
 }
