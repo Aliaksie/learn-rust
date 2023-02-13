@@ -67,7 +67,7 @@ fn commercials(hour: u32) -> String {
 }
 
 fn main() {
-    let name = env!("NAME");
+    let name = option_env!("NAME").expect("missing NAME");
     let greeting  = option_env!("GREETING").expect("Missing GREETING");
     println!("{}", format!("{greeting}, {name}!"));
 }

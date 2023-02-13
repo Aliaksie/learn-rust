@@ -1,5 +1,5 @@
 use rand::prelude::*;
-use learn_rust::*;
+use essential::*;
 
 #[test]
 fn it_rand_rectangle() {
