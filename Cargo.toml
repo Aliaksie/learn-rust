@@ -3,5 +3,6 @@ members = [
   "async-ex",
   "essential",
   "jni",
-  "tips"
+  "tips",
+  "lambdathreads"
 ]
